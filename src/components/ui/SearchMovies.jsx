@@ -1,23 +1,18 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import * as React from 'react';
+import { useForm } from 'react-hook-form';
 import getMovies from '../../services/movies';
 
-const onSubmit = async (event) => {
-  event.preventDefault();
-  const movieList = await getMovies('messi', '2017');
-  console.log(movieList);
-};
-
 export default function SearchMovies() {
+  const { register, handleSubmit } = useForm();
+  const onSubmit = async (data) => {
+    console.log(await getMovies(data.movieName, data.releaseDate));
+  };
   return (
-    <form onSubmit={onSubmit}>
-      <label
-        htmlFor="movie"
-      >
-        Movie
-        <input type="text" name="movie" />
-      </label>
-      <input type="submit" value="Submit" />
-
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <input {...register('movieName')} />
+      <input {...register('releaseDate')} />
+      <input type="submit" />
     </form>
   );
 }
